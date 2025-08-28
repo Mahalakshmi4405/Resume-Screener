@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>AI Resume Screener - Upload</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      --bg1: #0f172a;
+      --card: #ffffff;
+      --accent: #2563eb;
+      --muted: #6b7280;
+    }
+    body {
+      margin: 0;
+      font-family: Inter, "Segoe UI", Tahoma, sans-serif;
+      background: linear-gradient(135deg, #0f172a 0%, #0b1220 100%);
+      color: #0f172a;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+    .card {
+      width: 780px;
+      max-width: 100%;
+      background: var(--card);
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 10px 30px rgba(2,6,23,0.5);
+    }
+    h1 { margin: 0 0 6px; color: var(--accent); }
+    p.lead { margin: 0 0 16px; color: var(--muted); }
+
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    label { display: block; font-weight: 600; margin-bottom: 6px; color: #111827; }
+    input[type="file"], input[type="text"], textarea {
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 8px;
+      border: 1px solid #e6e6e6;
+      font-size: 14px;
+      box-sizing: border-box;
+    }
+    .row { margin-bottom: 12px; }
+    .full { grid-column: 1 / -1; }
+
+    .muted { color: var(--muted); font-size: 13px; margin-top: 6px; }
+
+    .actions {
+      display:flex;
+      gap:12px;
+      align-items:center;
+    }
+    button, input[type="submit"] {
+      padding: 10px 14px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      font-weight: 600;
+    }
+    .btn-primary { background: var(--accent); color: white; }
+    .btn-secondary { background: #eef2ff; color: var(--accent); }
+
+    .flash {
+      margin-top: 14px;
+    }
+    .flash > div { background: #fef3c7; padding: 10px; border-radius: 8px; color: #92400e; margin-bottom:8px; }
+
+    small.note { color: #6b7280; display: block; margin-top: 6px; }
+
+    @media (max-width:720px) {
+      .grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>AI Resume Screener</h1>
+    <p class="lead">Upload a resume (PDF/DOCX) and paste or link the job description. We'll compute a similarity score.</p>
+
+    <form method="post" enctype="multipart/form-data">
+      <div class="grid">
+        <div class="row">
+          <label>Resume File (PDF / DOCX)</label>
+          <input type="file" name="resume_file" accept=".pdf,.doc,.docx">
+          <small class="note">Or provide a public resume link (direct .pdf/.docx) below.</small>
+        </div>
+
+        <div class="row">
+          <label>Resume Link (optional)</label>
+          <input type="text" name="resume_link" placeholder="https://...resume.pdf">
+        </div>
+
+        <div class="row full">
+          <label>Job Description (paste text here)</label>
+          <textarea id="job_desc" name="job_desc" rows="6" placeholder="Paste job description text here..."></textarea>
+        </div>
+
+        <div class="row">
+          <label>Job Description Link (optional)</label>
+          <input type="text" id="job_link" name="job_link" placeholder="https://...job-posting">
+          <small class="note">If you enter a job link, we'll scrape the page and use its text as the job description.</small>
+        </div>
+
+        <div class="row">
+          <label>&nbsp;</label>
+          <div class="actions">
+            <button type="button" class="btn-secondary" onclick="pasteFromClipboard()">📋 Paste</button>
+            <button type="button" class="btn-secondary" onclick="scrapeJobLink()">🔎 Scrape Job Link</button>
+            <input type="submit" class="btn-primary" value="Submit and Analyze">
+          </div>
+        </div>
+      </div>
+
+      <div class="flash">
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            {% for msg in messages %}
+              <div>{{ msg }}</div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+      </div>
+    </form>
+  </div>
+
+<script>
+  async function pasteFromClipboard() {
+    try {
+      const text = await navigator.clipboard.readText();
+      const jd = document.getElementById("job_desc");
+      jd.value = text || jd.value;
+    } catch (e) {
+      alert("Clipboard access failed. Try Ctrl+V.");
+      console.error(e);
+    }
+  }
+
+  async function scrapeJobLink() {
+    const url = document.getElementById("job_link").value.trim();
+    if (!url) { alert("Enter job link first."); return; }
+    try {
+      const res = await fetch("/scrape", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({url})
+      });
+      const data = await res.json();
+      if (data.error) {
+        alert("Scrape error: " + data.error);
+      } else {
+        document.getElementById("job_desc").value = data.content || "";
+      }
+    } catch (err) {
+      alert("Failed to scrape job link.");
+      console.error(err);
+    }
+  }
+</script>
+</body>
+</html>

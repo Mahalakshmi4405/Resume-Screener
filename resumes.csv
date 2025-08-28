@@ -1,0 +1,74 @@
+ID,Filename,Resume_Content,Job_Description,Job_Link,Similarity,Good_Points,Bad_Points,Recommendations,Rating
+ea0faa8f-0015-42f2-9428-43073c4e9e79,ea0faa8f-0015-42f2-9428-43073c4e9e79_Mahalakshmi_BTech_1.docx,"Objective: 
+	Aspiring data science professional with a strong mathematical foundation and a passion for data-driven solutions. Skilled in analytical thinking and problem-solving to drive business insights and support data-driven decision-making. Eager to collaborate with a forward-thinking team to enhance expertise and deliver impactful results.
+
+Key Skills:
+	    Python, Java, SQL | Supervised & Unsupervised Learning | Data Cleaning, Manipulation & Visualization | Power BI, MS Excel, Word, PowerPoint | HTML, CSS
+
+Educational Qualification
+
+Internship Detail
+Intern – Machine Learning	                                                                                                         Jun’24-July’24
+Igress Solutions LLP, Remote
+Performed real estate data analysis and built ML models with focus on visualization, feature engineering, and evaluation.
+Intern – Machine Learning									Jan’24-Feb’24
+Prodigy Infotech, Remote
+Applied Data Science techniques such as cleansing and analyzing data using python libraries.  
+Intern - Machine Learning									Sep’23
+Elysium, Madurai
+Developed a credit model using Python
+Applied skills in data analysis, machine learning algorithms, and programming.
+Intern- Data Scientist										Sep’23 – Oct’23
+Codsoft, Remote
+Assisted in building data science model along with Python
+Projects
+Credit ML: Risk Analysis
+Implemented Decision Tree and Random Forest to enhance credit risk prediction and feature selection.
+Real Estate Prediction
+Built a model to predict property prices using key features and market trend analysis.
+Healthcare Chatbot
+Developed an AI chatbot using NLP for symptom recognition, self-care advice, and doctor consultation.
+Ransomware Detection
+Built a ransomware detection system using LSTM networks to accurately identify and classify malicious activities
+
+Certification
+Certified Microsoft Power BI Analyst Associate from ICTAcademy authenticated by Microsoft in March’24
+Completed Data Science with Python with SimpliLearn by November’23
+Completed Certification program in Data Science offered by Digital Adda in January’23
+Data Analytics Essentials by Cisco Network Academy in November’23
+Workshops & Conferences
+Participated in a workshop on Research Opportunities in Computer Science, Kalasalingam Academy, Mar 2025.
+Presented a paper on Edge Computing with Volunteer Resources at IEEE ICRTT 2K25, NSCET, May 2025.","ob Title: Junior QA Engineer – Automation (Freshers with AI Knowledge)(AIML - Degree Preferrable)
+
+Experience: 0–1 Years (Fresh Graduates)
+
+Job Description
+
+We are looking for passionate and enthusiastic fresh graduates to join our Quality Engineering team at Cornerstone. As a Junior QA Engineer – Automation, you will be part of a dynamic and fast-paced team working on our cutting-edge products. You’ll undergo comprehensive training in product functionality, automation tools, and testing methodologies. You’ll work closely with QA Leads and SDETs to contribute to real-time testing cycles and automation efforts.
+
+This role is ideal for individuals who are eager to build a career in Quality Engineering and are excited about integrating AI into automation testing.
+
+Key Responsibilities
+• Work with the Quality Engineering team on manual and automated test cases.
+• Learn and contribute to test automation frameworks using tools like Selenium, Robot, or Cypress.
+• Collaborate with developers and product managers to understand product features and requirements.
+• Participate in all phases of the testing lifecycle including test planning, test execution, defect logging, and regression testing.
+• Leverage AI concepts to contribute to smarter, more efficient automation strategies.
+
+Skills & Competencies
+• Strong knowledge of Artificial Intelligence fundamentals and concepts (Mandatory).
+• Good understanding of web technologies: JavaScript, HTML, CSS.
+• Familiarity with Object-Oriented Programming, preferably in Python/Java.
+• Exposure to automation frameworks/tools: Selenium, Robot Framework, Cypress, Appium.
+• Basic knowledge of API Testing and web services.
+• Understanding of Data Structures and OOPS concepts.
+• Proficiency in at least one scripting/programming language (Java/C++/.Net preferred).
+• Strong analytical, problem-solving, and debugging skills.
+• Excellent communication skills (verbal and written).
+• Eagerness to learn and grow in the field of Quality Engineering and Test Automation.
+
+Qualifications
+• B.E./B.Tech in Computer Science/IT, MCA, or MCS.
+• Strong academic background with exposure to AI technologies and programming.
+• Passion for a career in QA, automation, and test engineering.
+• Testing certifications (e.g., Selenium WebDriver, BDD, Cucumber, Cypress, Appium) are a plus.",,6.98,Error analyzing resume,"400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'Request contains an invalid argument.', 'status': 'INVALID_ARGUMENT'}}",Try again later,0.0
