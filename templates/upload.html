@@ -23,7 +23,7 @@
       padding: 24px;
     }
     .card {
-      width: 780px;
+      width: 880px;
       max-width: 100%;
       background: var(--card);
       border-radius: 12px;
@@ -70,15 +70,23 @@
 
     small.note { color: #6b7280; display: block; margin-top: 6px; }
 
-    @media (max-width:720px) {
+    .top-actions { display:flex; justify-content: flex-end; gap:12px; margin-bottom:10px; }
+    .link-btn { background: transparent; color: var(--accent); border: 1px solid #e6e6e6; padding:8px 10px; border-radius:8px; text-decoration:none; }
+
+    @media (max-width:920px) {
       .grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 <body>
   <div class="card">
+    <div class="top-actions">
+      <a class="link-btn" href="/">Upload</a>
+      <a class="link-btn" href="/resumes">All Reports</a>
+    </div>
+
     <h1>AI Resume Screener</h1>
-    <p class="lead">Upload a resume (PDF/DOCX) and paste or link the job description. We'll compute a similarity score.</p>
+    <p class="lead">Upload a resume (PDF/DOCX) and paste or link the job description. We'll compute a similarity score and ask Gemini to review & match.</p>
 
     <form method="post" enctype="multipart/form-data">
       <div class="grid">
@@ -95,7 +103,7 @@
 
         <div class="row full">
           <label>Job Description (paste text here)</label>
-          <textarea id="job_desc" name="job_desc" rows="6" placeholder="Paste job description text here..."></textarea>
+          <textarea id="job_desc" name="job_desc" rows="8" placeholder="Paste job description text here..."></textarea>
         </div>
 
         <div class="row">
@@ -107,7 +115,7 @@
         <div class="row">
           <label>&nbsp;</label>
           <div class="actions">
-            <button type="button" class="btn-secondary" onclick="pasteFromClipboard()">📋 Paste</button>
+            <button type="button" class="btn-secondary" onclick="pasteFromClipboard()">📋 Paste JD</button>
             <button type="button" class="btn-secondary" onclick="scrapeJobLink()">🔎 Scrape Job Link</button>
             <input type="submit" class="btn-primary" value="Submit and Analyze">
           </div>

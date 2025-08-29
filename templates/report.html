@@ -1,0 +1,380 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Resume Report</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <!-- Optional: load Inter for nicer typography (remove if offline) -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg-1: #0b1220;
+      --bg-2: #071127;
+      --glass: rgba(255,255,255,0.04);
+      --card: rgba(255,255,255,1);
+      --muted: #6b7280;
+      --accent-start: #6a7bff;
+      --accent-end: #25c2ff;
+      --accent-dark: #2b5cff;
+      --good-bg: linear-gradient(90deg,#ddfbe6 0%, #bff3d1 100%);
+      --bad-bg: linear-gradient(90deg,#ffe7e7 0%, #ffd0d0 100%);
+      --rec-bg: linear-gradient(90deg,#fff9d6 0%, #fff1a6 100%);
+      --glass-panel: rgba(255,255,255,0.96);
+      --shadow: 0 10px 30px rgba(2,6,23,0.45);
+      --radius: 14px;
+    }
+
+    html,body { height:100%; margin:0; font-family:Inter, system-ui, -apple-system, "Segoe UI", Tahoma, sans-serif; background: radial-gradient(1200px 600px at 10% 10%, rgba(66,59,255,0.08), transparent), linear-gradient(180deg,var(--bg-1), var(--bg-2)); color:#0f172a; -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale; }
+
+    .wrap { display:flex; align-items:flex-start; justify-content:center; padding:36px; gap:20px; min-height:100vh; box-sizing:border-box; }
+
+    /* Card */
+    .card {
+      width:980px;
+      max-width:100%;
+      background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(250,250,250,0.98));
+      border-radius: var(--radius);
+      padding:22px;
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(17,24,39,0.04);
+      transform: translateY(0);
+      animation: floatUp .45s ease both;
+    }
+    @keyframes floatUp { from { opacity:0; transform: translateY(12px); } to { opacity:1; transform: translateY(0); } }
+
+    .header {
+      display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:8px;
+    }
+    .title {
+      display:flex; gap:18px; align-items:center;
+    }
+    .logo {
+      width:62px; height:62px; border-radius:12px;
+      background: linear-gradient(135deg,var(--accent-start), var(--accent-end));
+      display:flex; align-items:center; justify-content:center;
+      color:white; font-weight:700; font-size:20px; box-shadow: 0 8px 22px rgba(43,92,255,0.18);
+    }
+    h1 { margin:0; font-size:22px; color:var(--accent-dark); letter-spacing:-0.2px; }
+    p.lead { margin:0; color:var(--muted); font-size:13px; }
+
+    .header-actions { display:flex; gap:10px; align-items:center; }
+    .back-link { color:var(--accent-dark); text-decoration:none; border:1px solid rgba(37,194,255,0.12); padding:8px 10px; border-radius:10px; font-weight:600; background:transparent; }
+    .file-meta { color:var(--muted); font-size:12px; text-align:right; }
+
+    /* meta badges + progress */
+    .meta-row { display:flex; gap:12px; align-items:center; margin-top:14px; flex-wrap:wrap; }
+    .badge {
+      display:inline-flex; align-items:center; gap:8px; padding:8px 12px; border-radius:999px;
+      background: linear-gradient(90deg, rgba(41,65,255,0.06), rgba(37,194,255,0.04));
+      border:1px solid rgba(37,194,255,0.06);
+      color: var(--accent-dark); font-weight:700; font-size:13px;
+      box-shadow: 0 6px 18px rgba(10,10,40,0.03);
+    }
+    .badge .num { font-weight:800; color:var(--accent-dark); margin-left:6px; }
+
+    .status-wrap { display:flex; align-items:center; gap:14px; margin-left:auto; }
+    .progress-wrap {
+      height:14px; width:340px; background:linear-gradient(180deg, rgba(2,6,23,0.04), rgba(2,6,23,0.02)); border-radius:8px; overflow:hidden; border:1px solid rgba(2,6,23,0.03);
+      box-shadow: inset 0 -4px 14px rgba(12,18,40,0.02);
+    }
+    .progress-bar {
+      height:100%;
+      width:0%;
+      background: linear-gradient(90deg,var(--accent-start), var(--accent-end));
+      transition: width 600ms cubic-bezier(.2,.9,.3,1);
+    }
+
+    .status-pill {
+      padding:6px 10px; border-radius:999px; font-weight:700; font-size:13px; color:#063072; background: linear-gradient(90deg,#dbeafe,#e9f5ff);
+      border:1px solid rgba(37,194,255,0.12);
+    }
+
+    /* grid layout */
+    .grid { display:grid; grid-template-columns: 1fr 1fr; gap:16px; margin-top:18px; }
+    .panel {
+      background: var(--glass-panel);
+      border-radius:12px;
+      padding:14px;
+      min-height:120px;
+      box-shadow: 0 6px 18px rgba(10,10,40,0.03);
+      border:1px solid rgba(2,6,23,0.03);
+      transition: transform .22s ease, box-shadow .22s ease;
+    }
+    .panel:hover { transform: translateY(-4px); box-shadow: 0 18px 36px rgba(10,10,40,0.06); }
+
+    .panel h3 { margin:0 0 8px 0; color: #0b2b4a; font-size:15px; }
+    pre { margin:0; font-family:inherit; font-size:13px; color:#0b1b2b; white-space:pre-wrap; word-break:break-word; }
+
+    /* colored lists for strengths/weaknesses/recs */
+    .good-list, .bad-list, .rec-list { margin:0; padding:0; list-style:none; display:flex; flex-direction:column; gap:8px; }
+    .good-list li, .bad-list li, .rec-list li {
+      display:flex; align-items:center; gap:10px; padding:10px; border-radius:10px; font-size:13px; color:#07323a;
+      box-shadow: inset 0 -3px 10px rgba(255,255,255,0.6);
+      transform-origin:center left;
+      opacity:0; transform: translateX(-8px) scale(.995);
+      animation: itemIn .45s ease forwards;
+    }
+    .good-list li { background: var(--good-bg); }
+    .bad-list li { background: var(--bad-bg); }
+    .rec-list li { background: var(--rec-bg); }
+
+    @keyframes itemIn {
+      to { opacity:1; transform: translateX(0) scale(1); }
+    }
+
+    /* Comparison block */
+    .comparison { margin-top:12px; padding:12px; border-radius:10px; background: linear-gradient(180deg, rgba(37,194,255,0.04), rgba(106,123,255,0.02)); border-left:4px solid rgba(106,123,255,0.18); color:#07263a; font-size:13px; }
+
+    /* Steps */
+    .steps { display:flex; gap:10px; margin-top:10px; flex-wrap:wrap; }
+    .step { background:rgba(12,34,56,0.03); padding:8px 10px; border-radius:8px; font-weight:700; font-size:12px; color:#10304a; border:1px solid rgba(2,6,23,0.03); }
+    .step.done { background: linear-gradient(90deg,#dff6ff,#eaf4ff); color:#08304a; transform:translateY(-2px); box-shadow: 0 8px 20px rgba(37,194,255,0.06); }
+
+    /* responsive */
+    @media (max-width:1000px) {
+      .progress-wrap { width:220px; }
+    }
+    @media (max-width:760px) {
+      .grid { grid-template-columns: 1fr; }
+      .status-wrap { width:100%; margin-top:12px; justify-content:space-between; }
+    }
+
+    /* small animated icon */
+    .spark {
+      width:28px; height:28px; border-radius:8px; display:inline-flex; align-items:center; justify-content:center;
+      background: linear-gradient(135deg,#fff,#ffffff); box-shadow: 0 6px 18px rgba(37,194,255,0.06);
+      position:relative; overflow:hidden;
+    }
+    .spark::after {
+      content:""; position:absolute; inset:0; background: linear-gradient(90deg, rgba(255,255,255,0.15), rgba(255,255,255,0.0)); transform:translateX(-100%); animation: gloss 2s linear infinite;
+    }
+    @keyframes gloss { to { transform:translateX(100%); } }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card" role="main" aria-labelledby="report-title">
+      <div class="header">
+        <div class="title">
+          <div class="logo" aria-hidden="true">AI</div>
+          <div>
+            <h1 id="report-title">Resume Report</h1>
+            <p class="lead">Combined Gemini insights · local similarity · recommendations</p>
+          </div>
+        </div>
+
+        <div class="header-actions">
+          <a class="back-link" href="{{ url_for('upload_resume') }}">← Back to upload</a>
+          <div class="file-meta">
+            {% if filename %}
+              <div style="font-weight:700;">{{ filename }}</div>
+            {% endif %}
+            <div style="color:var(--muted); font-size:12px;">ID: {{ id }}</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="meta-row">
+        <div class="badge" title="Local TF-IDF + keyword match">
+          Local similarity <span class="num" id="local-sim">{{ similarity or 'N/A' }}</span>%
+        </div>
+
+        <div class="badge" title="Gemini combined match">
+          Gemini match <span class="num" id="gemini-match">{{ gemini_match_score if gemini_match_score is not none else 'N/A' }}</span>%
+        </div>
+
+        <div class="badge" title="Gemini rating out of 10">
+          Gemini rating <span class="num" id="gemini-rating">{{ gemini_rating if gemini_rating is not none else 'N/A' }}</span>/10
+        </div>
+
+        <div class="status-wrap">
+          <div class="progress-wrap" aria-hidden="true">
+            <div id="progress-bar" class="progress-bar" style="width: {{ progress or 0 }}%"></div>
+          </div>
+          <div class="status-pill" id="status-text">{{ status }}</div>
+        </div>
+      </div>
+
+      <div class="steps" aria-hidden="true">
+        <div class="step" id="step-1">Upload / Extract</div>
+        <div class="step" id="step-2">Strengths</div>
+        <div class="step" id="step-3">Weaknesses</div>
+        <div class="step" id="step-4">Recommendations</div>
+        <div class="step" id="step-5">Rating</div>
+        <div class="step" id="step-6">Match & Comparison</div>
+      </div>
+
+      <div class="grid" role="region" aria-label="Report content">
+        <div class="panel" aria-labelledby="resume-title">
+          <h3 id="resume-title">Resume (snippet)</h3>
+          <pre id="resume-snippet">{{ resume_snippet }}</pre>
+        </div>
+
+        <div class="panel" aria-labelledby="job-title">
+          <h3 id="job-title">Job Description (snippet)</h3>
+          <pre id="job-snippet">{{ job_snippet }}</pre>
+        </div>
+
+        <div class="panel" aria-labelledby="strengths-title">
+          <h3 id="strengths-title">Gemini — Strengths</h3>
+          <ul id="gemini-good" class="good-list">
+            {% if gemini_good %}
+              {% for item in gemini_good.splitlines() %}
+                {% if item.strip() %}<li>{{ item.strip("• ").strip() }}</li>{% endif %}
+              {% endfor %}
+            {% else %}
+              <li>No strengths found</li>
+            {% endif %}
+          </ul>
+        </div>
+
+        <div class="panel" aria-labelledby="weaknesses-title">
+          <h3 id="weaknesses-title">Gemini — Weaknesses</h3>
+          <ul id="gemini-bad" class="bad-list">
+            {% if gemini_bad %}
+              {% for item in gemini_bad.splitlines() %}
+                {% if item.strip() %}<li>{{ item.strip("• ").strip() }}</li>{% endif %}
+              {% endfor %}
+            {% else %}
+              <li>No weaknesses found</li>
+            {% endif %}
+          </ul>
+        </div>
+
+        <div class="panel" style="grid-column:1 / -1;" aria-labelledby="recs-title">
+          <h3 id="recs-title">Gemini — Recommendations & Comparison</h3>
+
+          <div style="display:flex; gap:16px; align-items:flex-start; flex-wrap:wrap;">
+            <div style="flex:1 1 480px;">
+              <strong style="display:block; margin-bottom:8px;">Recommendations</strong>
+              <ul id="gemini-recs" class="rec-list">
+                {% if gemini_recommendations %}
+                  {% for item in gemini_recommendations.splitlines() %}
+                    {% if item.strip() %}<li>{{ item.strip("• ").strip() }}</li>{% endif %}
+                  {% endfor %}
+                {% else %}
+                  <li>No recommendations</li>
+                {% endif %}
+              </ul>
+            </div>
+
+            <div style="flex:1 1 380px;">
+              <strong style="display:block; margin-bottom:8px;">Comparison summary</strong>
+              <div id="gemini-comp" class="comparison">{{ gemini_comparison or "No comparison available" }}</div>
+            </div>
+          </div>
+        </div>
+      </div> <!-- grid -->
+    </div> <!-- card -->
+  </div> <!-- wrap -->
+
+  <script>
+    const resumeId = "{{ id }}";
+
+    // Smoothly animate numeric changes (small easing)
+    function animateNumber(el, toValue, duration = 600) {
+      if (!el) return;
+      const start = parseFloat(el.innerText) || 0;
+      const diff = toValue - start;
+      const startTime = performance.now();
+      function step(now) {
+        const t = Math.min(1, (now - startTime) / duration);
+        const eased = (1 - Math.cos(Math.PI * t)) / 2; // ease-in-out
+        el.innerText = (start + diff * eased).toFixed((toValue % 1 === 0) ? 0 : 2);
+        if (t < 1) requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+    }
+
+    // update progress bar width with nice animation
+    function setProgressBar(percent) {
+      const bar = document.getElementById('progress-bar');
+      if (!bar) return;
+      const clamped = Math.max(0, Math.min(100, Number(percent) || 0));
+      bar.style.width = clamped + '%';
+    }
+
+    // update step UI (add done class up to index determined by progress)
+    function updateSteps(progress) {
+      const mapping = [
+        [5, 'step-1'],
+        [25, 'step-2'],
+        [40, 'step-3'],
+        [55, 'step-4'],
+        [70, 'step-5'],
+        [95, 'step-6']
+      ];
+      mapping.forEach(([threshold, id]) => {
+        const node = document.getElementById(id);
+        if (!node) return;
+        if ((progress || 0) >= threshold) node.classList.add('done'); else node.classList.remove('done');
+      });
+    }
+
+    async function fetchStatusOnce() {
+      try {
+        const res = await fetch(`/status/${resumeId}`);
+        if (!res.ok) return null;
+        return await res.json();
+      } catch (e) {
+        return null;
+      }
+    }
+
+    async function pollStatus() {
+      const data = await fetchStatusOnce();
+      if (!data) { setTimeout(pollStatus, 1800); return; }
+
+      // Numeric badges animation
+      const localEl = document.getElementById('local-sim');
+      const gemMatchEl = document.getElementById('gemini-match');
+      const gemRatingEl = document.getElementById('gemini-rating');
+
+      if (data.similarity !== null && data.similarity !== undefined) animateNumber(localEl, Number(data.similarity));
+      if (data.gemini_match_score !== null && data.gemini_match_score !== undefined) animateNumber(gemMatchEl, Number(data.gemini_match_score));
+      if (data.gemini_rating !== null && data.gemini_rating !== undefined) animateNumber(gemRatingEl, Number(data.gemini_rating));
+
+      // Progress & status
+      setProgressBar(data.progress || 0);
+      document.getElementById('status-text').innerText = (data.status || '').toUpperCase();
+
+      // update lists (if present)
+      if (data.gemini_good) {
+        const goodList = document.getElementById('gemini-good');
+        const items = data.gemini_good.split(/\r?\n/).map(i => i.trim()).filter(Boolean);
+        goodList.innerHTML = items.length ? items.map((i, idx) => `<li style="animation-delay:${(idx*70)}ms">${i.replace(/^•\s*/,'')}</li>`).join('') : '<li>No strengths found</li>';
+      }
+      if (data.gemini_bad) {
+        const badList = document.getElementById('gemini-bad');
+        const items = data.gemini_bad.split(/\r?\n/).map(i => i.trim()).filter(Boolean);
+        badList.innerHTML = items.length ? items.map((i, idx) => `<li style="animation-delay:${(idx*70)}ms">${i.replace(/^•\s*/,'')}</li>`).join('') : '<li>No weaknesses found</li>';
+      }
+      if (data.gemini_recommendations) {
+        const recList = document.getElementById('gemini-recs');
+        const items = data.gemini_recommendations.split(/\r?\n/).map(i => i.trim()).filter(Boolean);
+        recList.innerHTML = items.length ? items.map((i, idx) => `<li style="animation-delay:${(idx*70)}ms">${i.replace(/^•\s*/,'')}</li>`).join('') : '<li>No recommendations</li>';
+      }
+      if (data.gemini_comparison) {
+        document.getElementById('gemini-comp').innerText = data.gemini_comparison;
+      }
+
+      updateSteps(data.progress || 0);
+
+      // keep polling until done/failed
+      const stat = (data.status || '').toLowerCase();
+      if (stat !== 'done' && stat !== 'failed') {
+        setTimeout(pollStatus, 1200);
+      } else {
+        // final state; ensure progress reaches 100 when done
+        if (stat === 'done') setProgressBar(100);
+      }
+    }
+
+    // start polling when page loads
+    window.addEventListener('load', () => {
+      pollStatus();
+    });
+  </script>
+</body>
+</html>

@@ -1,74 +1,168 @@
-ID,Filename,Resume_Content,Job_Description,Job_Link,Similarity,Good_Points,Bad_Points,Recommendations,Rating
-ea0faa8f-0015-42f2-9428-43073c4e9e79,ea0faa8f-0015-42f2-9428-43073c4e9e79_Mahalakshmi_BTech_1.docx,"Objective: 
-	Aspiring data science professional with a strong mathematical foundation and a passion for data-driven solutions. Skilled in analytical thinking and problem-solving to drive business insights and support data-driven decision-making. Eager to collaborate with a forward-thinking team to enhance expertise and deliver impactful results.
+ID,Filename,Resume_Content,Job_Description,Job_Link,Similarity,Good_Points,Bad_Points,Recommendations,Rating,Gemini_Match_Score,Gemini_Comparison
+3c338458-714f-4c2e-bd14-832ba8e9aa2f,3c338458-714f-4c2e-bd14-832ba8e9aa2f_ATS_Resume.pdf,"SUMMARY
+          AI Engineering student with a strong focus on Generative AI, Large Language Models (LLMs), and
+Applied Machine Learning. Skilled in Computer Vision and Deep Learning, with advanced Python
+proficiency and fundamental knowledge of C and C++. Experienced in model training, optimization, and
+deployment, alongside data visualization using Power BI,Tableau, etc. Passionate about building real-world
+AI solutions with measurable impact. Actively exploring AI agents.
+ARUMUGA TAMIL SELVAN M
+241 B, Srivilliputhur,Tamil Nadu |  arumugatamilselvan@gmail.com | +91 8072987300 | linkedin | Github
+JUNIOR AI ENGINEER
+     TECHNICAL SKILLS
+Programming: Python (Advanced), C (Beginner), C++ (Beginner)
+AI/ML Frameworks: PyTorch, Scikit-learn, TensorFlow, ONNX
+Data Science Tools: NumPy, Pandas, Matplotlib, Seaborn, Plotly, Panel
+Computer Vision: OpenCV, YOLOv8, CNNs, Object tracking (Deep SORT, ByteTrack)
+LLMs & Gen AI: Hugging Face Transformers, BERT, GPT, LangChain, RAG, Prompt Engineering, Tuning,
+Embedding, Ollama, vLLM
+Distributed Computing: Ray, DeepSpeed
+AI Agents & Automation: LangGraph Agents, n8n (No-code AI automation)
+Deployment & APIs: Flask, FastAPI (Basic), Streamlit
+Databases : MySQL, Microsoft SQL Server,MongoDB,Chroma, Qdrant
+Developer Tools: Git, Docker, Jupyter Notebook, VS Code, Google Colab, Anaconda, Cursor
+March 2024 - May 2024 Computer Vision Intern | Ramco Cements, Ariyalur
+Developed a real-time cement bag counting system using image segmentation with Yolo and
+python, OpenCV.
+Achieved 99.8% accuracy on real-world industrial camera streams.
+Optimized model inference time from 256 ms to 1-2 ms using ONNX and TensorRT.
+Implemented parallel processing across 16 live camera feeds using NVIDIA Ada 4500 GPU.
+Ensured smooth real-time deployment in a high-throughput industrial production environment.
+April 2025 - July 2025Junior AI Intern | Digispot AI — Bangalore, India      
+Collaborated on enhancing an AI Agentic Content Writer by integrating  to improve contextual
+accuracy and coherence.
+Applied SEO optimization strategies to refine blog content, increasing discoverability and
+performance across search engines.
+Developed automated lead generation workflows for marketing campaigns
+    PROFESSIONAL EXPERIENCE & PROJECTS
+Aug 2024 - Sep 2024 Computer Vision Intern | Ramco Cements, Alathiyur
+Developed a YOLO-based cement bag detection system for efficient tracking and monitoring in the
+factory environment.
+Designed and deployed a real-time Vehicle Speed Estimation tool to enhance on-site safety and
+compliance.
+ Nov 2023 - Dec 2023Data Science Intern | Igress Solution, Bangalore
+Built end-to-end time-series forecasting pipeline using CSV data, from preprocessing to model
+deployment.
+Developed models (Random Forest, XGBoost, LSTM, Markov) achieving 99% accuracy, capturing
+directional trends and peaks.
+Analyzed 20+ years of fatality data to identify escalation patterns and inform strategic insights.
+April 2024Data Analytics Intern – Ramco Institute of Technology
+Built an interactive data visualization dashboard for 2023 college admissions using Power BI and
+Python, enabling real-time insights for administrators.
+Managed and processed structured admission data with SQL and phpMyAdmin; integrated outputs
+into the ERP portal for live analytics access.
+Oct 2024 – Dec 2024AI Intern  – Ramco Institute of Technology
+Developed an AI-powered recommendation system using the Gemini API to suggest job roles on
+the college placement portal based on student profiles.
+Automated job scraping and content updates to keep the placement platform current, boosting
+relevance and personalization for student opportunities.
+Feb 2025 - April 2025AI Intern – RD Labs (Coding Platform)
+Developed an AI-driven personalized coding question generator using Gemini API, LangChain,
+and vector databases.
+Designed LangChain agents to analyze student coding history and context, enabling dynamic and
+adaptive question set generation.
+Other Experiences:
+AI Contributor – Mentron LMS
+ Collaborated with a college senior on their early-stage startup to co-develop a scalable AI-driven
+LMS using modular nodes, intelligent agents, and vectordb-based  systems.
+Computer Vision Intern – Eden Berg
+ Built a real-time malpractice detection system using MediaPipe and OpenCV to track students via
+webcam during online exams.
+LLM Cluster Dev – RIT Lab
+ Set up an RTX 4060 GPU cluster using Ray & DeepSpeed to enable distributed LLM training and
+inference across lab nodes.
+Medical Imaging Project
+ Created a YOLO-based kidney stone detection model achieving 95%+ accuracy; handled
+annotations and inference tuning.
+BI Intern – Yesget Graphics
+ Designed a live Power BI dashboard for real-time worker tracking using SQL and Python, boosting
+factory monitoring efficiency.
+   EDUCATION
+Bachelor of Technology in  Artificial Intelligence & Data Science | Ramco Institute of Technology
+     CGPA: 8.31 / 10
+     Expected Graduation:  2026
+Higher Secondary Education (HSC) | St Joseph RC Higher Secondary School
+     Percentage: 84.6%
+     Completed: 2022
+Languages: English, Tamil
+Soft skills : Adaptability,Teamwork, Problem-solving,, Time Management
+Attachments
+     ADDITIONAL INFORMATION
+CERTIFICATIONS
+Python Certification – MIMO, 2022
+SQL Certification – MIMO, 2023
+Certified Power BI Analyst – Forsage, 2023
+5-Star Python Proficiency Badge – HackerRank, 2022
+ Top  AI Voice – LinkedIn Recognition - 2024
+Best Borrower of RIT Library  - 2023
+Best Library User – RIT Library 2023
+last updated (22/7/2025)","Job Description: Junior AI Engineer
 
-Key Skills:
-	    Python, Java, SQL | Supervised & Unsupervised Learning | Data Cleaning, Manipulation & Visualization | Power BI, MS Excel, Word, PowerPoint | HTML, CSS
+Position: Junior AI Engineer
+Location: [Your Location / Remote / Hybrid]
+Employment Type: Full-time
 
-Educational Qualification
+About the Role
 
-Internship Detail
-Intern – Machine Learning	                                                                                                         Jun’24-July’24
-Igress Solutions LLP, Remote
-Performed real estate data analysis and built ML models with focus on visualization, feature engineering, and evaluation.
-Intern – Machine Learning									Jan’24-Feb’24
-Prodigy Infotech, Remote
-Applied Data Science techniques such as cleansing and analyzing data using python libraries.  
-Intern - Machine Learning									Sep’23
-Elysium, Madurai
-Developed a credit model using Python
-Applied skills in data analysis, machine learning algorithms, and programming.
-Intern- Data Scientist										Sep’23 – Oct’23
-Codsoft, Remote
-Assisted in building data science model along with Python
-Projects
-Credit ML: Risk Analysis
-Implemented Decision Tree and Random Forest to enhance credit risk prediction and feature selection.
-Real Estate Prediction
-Built a model to predict property prices using key features and market trend analysis.
-Healthcare Chatbot
-Developed an AI chatbot using NLP for symptom recognition, self-care advice, and doctor consultation.
-Ransomware Detection
-Built a ransomware detection system using LSTM networks to accurately identify and classify malicious activities
-
-Certification
-Certified Microsoft Power BI Analyst Associate from ICTAcademy authenticated by Microsoft in March’24
-Completed Data Science with Python with SimpliLearn by November’23
-Completed Certification program in Data Science offered by Digital Adda in January’23
-Data Analytics Essentials by Cisco Network Academy in November’23
-Workshops & Conferences
-Participated in a workshop on Research Opportunities in Computer Science, Kalasalingam Academy, Mar 2025.
-Presented a paper on Edge Computing with Volunteer Resources at IEEE ICRTT 2K25, NSCET, May 2025.","ob Title: Junior QA Engineer – Automation (Freshers with AI Knowledge)(AIML - Degree Preferrable)
-
-Experience: 0–1 Years (Fresh Graduates)
-
-Job Description
-
-We are looking for passionate and enthusiastic fresh graduates to join our Quality Engineering team at Cornerstone. As a Junior QA Engineer – Automation, you will be part of a dynamic and fast-paced team working on our cutting-edge products. You’ll undergo comprehensive training in product functionality, automation tools, and testing methodologies. You’ll work closely with QA Leads and SDETs to contribute to real-time testing cycles and automation efforts.
-
-This role is ideal for individuals who are eager to build a career in Quality Engineering and are excited about integrating AI into automation testing.
+We are seeking a Junior AI Engineer to join our growing team of innovators. This role is ideal for someone passionate about artificial intelligence, machine learning, and data-driven problem-solving, with a strong desire to learn and contribute to real-world AI projects. As a Junior AI Engineer, you will work closely with senior engineers and data scientists to design, build, and deploy AI-powered solutions that drive impact across our products and services.
 
 Key Responsibilities
-• Work with the Quality Engineering team on manual and automated test cases.
-• Learn and contribute to test automation frameworks using tools like Selenium, Robot, or Cypress.
-• Collaborate with developers and product managers to understand product features and requirements.
-• Participate in all phases of the testing lifecycle including test planning, test execution, defect logging, and regression testing.
-• Leverage AI concepts to contribute to smarter, more efficient automation strategies.
 
-Skills & Competencies
-• Strong knowledge of Artificial Intelligence fundamentals and concepts (Mandatory).
-• Good understanding of web technologies: JavaScript, HTML, CSS.
-• Familiarity with Object-Oriented Programming, preferably in Python/Java.
-• Exposure to automation frameworks/tools: Selenium, Robot Framework, Cypress, Appium.
-• Basic knowledge of API Testing and web services.
-• Understanding of Data Structures and OOPS concepts.
-• Proficiency in at least one scripting/programming language (Java/C++/.Net preferred).
-• Strong analytical, problem-solving, and debugging skills.
-• Excellent communication skills (verbal and written).
-• Eagerness to learn and grow in the field of Quality Engineering and Test Automation.
+Assist in developing and training machine learning models for various applications.
+
+Work with large datasets, including data cleaning, preprocessing, and feature engineering.
+
+Support the deployment and monitoring of AI models in production.
+
+Collaborate with cross-functional teams including product, engineering, and research.
+
+Conduct literature reviews to stay updated on emerging AI/ML techniques and tools.
+
+Participate in code reviews, contribute to documentation, and ensure best practices in reproducible AI workflows.
+
+Provide support in debugging, optimizing, and scaling AI systems.
 
 Qualifications
-• B.E./B.Tech in Computer Science/IT, MCA, or MCS.
-• Strong academic background with exposure to AI technologies and programming.
-• Passion for a career in QA, automation, and test engineering.
-• Testing certifications (e.g., Selenium WebDriver, BDD, Cucumber, Cypress, Appium) are a plus.",,6.98,Error analyzing resume,"400 INVALID_ARGUMENT. {'error': {'code': 400, 'message': 'Request contains an invalid argument.', 'status': 'INVALID_ARGUMENT'}}",Try again later,0.0
+
+Required:
+
+Bachelor’s degree in Computer Science, Data Science, Engineering, Mathematics, or related field (or equivalent practical experience).
+
+Strong knowledge of Python and libraries such as NumPy, Pandas, and Scikit-learn.
+
+Basic understanding of machine learning concepts (supervised/unsupervised learning, neural networks, NLP, or computer vision).
+
+Familiarity with frameworks such as TensorFlow or PyTorch.
+
+Knowledge of SQL and experience handling structured/unstructured data.
+
+Good problem-solving skills and eagerness to learn.
+
+Preferred (Nice-to-have):
+
+Internship or project experience in AI/ML applications.
+
+Familiarity with cloud platforms (AWS, GCP, Azure) for AI/ML workflows.
+
+Understanding of MLOps tools for model deployment and monitoring.
+
+Contributions to open-source projects, Kaggle competitions, or personal AI projects.
+
+What We Offer
+
+Mentorship and growth opportunities with experienced AI professionals.
+
+Exposure to cutting-edge AI projects across industries.
+
+A collaborative, innovative, and supportive work environment.
+
+Opportunities for professional development and training.
+
+Competitive salary and benefits package.",,18.16,"*   Extensive hands-on AI/ML project and internship experience.
+*   Comprehensive technical skills in Python, ML frameworks, CV, and LLMs.
+*   Proven ability to deploy and optimize real-world AI solutions.","*   Experience section contains multiple future-dated internships.
+*   Lacks explicit mention of cloud platform experience (AWS/GCP/Azure).
+*   Includes irrelevant personal awards (e.g., Best Library User).","Here are 3 very short, actionable improvements for this resume:
+
+*   **Reorder Experience:** Reorganize ""Professional Experience & Projects"" into strict reverse chronological order (most recent first) for clarity and readability.
+*   **Add Cloud Experience:** Explicitly mention any familiarity with cloud platforms (AWS, GCP, Azure) under ""Technical Skills"" to address the job's preferred qualifications.
+*   **Highlight MLOps Tools:** If applicable, list any MLOps-specific tools (e.g., MLflow, Kubeflow, W&B) in ""Technical Skills"" or within project descriptions to strengthen alignment with preferred qualifications.",9.0,64.26,"The candidate is an excellent match for the Junior AI Engineer role, demonstrating strong proficiency in Python, key AI/ML frameworks like PyTorch and TensorFlow, and practical experience across Computer Vision, LLMs, and data science. Their extensive internships and projects directly align with the job's core responsibilities, including model development, optimization, and real-time deployment. While explicit mention of major cloud platforms or dedicated MLOps tools is limited, the candidate's proven ability to build and deploy complex AI solutions in diverse settings makes them a highly compelling applicant."
