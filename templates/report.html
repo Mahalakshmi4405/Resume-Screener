@@ -106,29 +106,50 @@
           <div class="status-pill" id="status-text">{{ status }}</div>
         </div>
       </div>
-
-      <div class="grid" role="region" aria-label="Report content">
-        <div class="panel" aria-labelledby="resume-title">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-            <h3 id="resume-title">Resume (snippet)</h3>
-            <div class="right-actions">
-              <button class="btn btn-ghost" onclick="copyFromElementText('resume-pre')">Copy</button>
-              <a class="show-more" onclick="toggleExpand('resume-pre')">Show more</a>
-            </div>
-          </div>
-          <pre id="resume-pre" class="snippet">{{ resume_snippet }}</pre>
-        </div>
-
-        <div class="panel" aria-labelledby="job-title">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-            <h3 id="job-title">Job Description (snippet)</h3>
-            <div class="right-actions">
-              <button class="btn btn-ghost" onclick="copyFromElementText('job-pre')">Copy</button>
-              <a class="show-more" onclick="toggleExpand('job-pre')">Show more</a>
-            </div>
-          </div>
-          <pre id="job-pre" class="snippet">{{ job_snippet }}</pre>
-        </div>
+      <div class="grid" role="region" aria-label="Report content" 
+      style="display:grid;grid-template-columns:1fr 1fr;gap:16px;height:100%;">
+ 
+   <!-- Resume -->
+   <div class="panel" aria-labelledby="resume-title" 
+        style="display:flex;flex-direction:column;border:1px solid #ddd;border-radius:8px;
+               padding:10px;background:#fafafa;height:100%;overflow:hidden;">
+     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+       <h3 id="resume-title" style="margin:0;">Resume (snippet)</h3>
+       <div class="right-actions" style="display:flex;gap:8px;">
+         <button class="btn btn-ghost" onclick="copyFromElementText('resume-pre')">Copy</button>
+         <a class="show-more" onclick="toggleExpand('resume-pre')">Show more</a>
+       </div>
+     </div>
+     <pre id="resume-pre"
+          style="flex:1;overflow-y:auto;padding:12px;border:1px solid #ccc;border-radius:6px;
+                 background:#fff;font-size:14px;white-space:pre-wrap;word-wrap:break-word;
+                 max-height:450px;min-height:250px;margin:0;">
+ {{ resume_snippet }}
+     </pre>
+   </div>
+ 
+   <!-- Job -->
+   <div class="panel" aria-labelledby="job-title" 
+        style="display:flex;flex-direction:column;border:1px solid #ddd;border-radius:8px;
+               padding:10px;background:#fafafa;height:100%;overflow:hidden;">
+     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+       <h3 id="job-title" style="margin:0;">Job Description (snippet)</h3>
+       <div class="right-actions" style="display:flex;gap:8px;">
+         <button class="btn btn-ghost" onclick="copyFromElementText('job-pre')">Copy</button>
+         <a class="show-more" onclick="toggleExpand('job-pre')">Show more</a>
+       </div>
+     </div>
+     <pre id="job-pre"
+          style="flex:1;overflow-y:auto;padding:12px;border:1px solid #ccc;border-radius:6px;
+                 background:#fff;font-size:14px;white-space:pre-wrap;word-wrap:break-word;
+                 max-height:450px;min-height:250px;margin:0;">
+ {{ job_snippet }}
+     </pre>
+   </div>
+ 
+ </div>
+ 
+       
 
         <div class="panel" aria-labelledby="strengths-title">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">

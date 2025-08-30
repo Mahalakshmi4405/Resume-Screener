@@ -348,7 +348,7 @@ def process_resume_background(resume_id, filepath, resume_text, job_desc, job_li
         # Gemini recommendations
         update_db_columns(resume_id, progress=70)
         try:
-            recs_raw = gemini_field_from_text(resume_text, job_desc, "Suggest 3 very short, actionable improvements for this resume. Use concise bullet points (•), focused on making the resume stronger for the given job.", expect_json=False)
+            recs_raw = gemini_field_from_text(resume_text,job_desc,"List 4 clear, short resume improvements in bullet points (•).only give the valuable bullet points",expect_json=False)
             recs = normalize_gemini_text(recs_raw)
             update_db_columns(resume_id, gemini_recommendations=recs, progress=75)
         except Exception:
