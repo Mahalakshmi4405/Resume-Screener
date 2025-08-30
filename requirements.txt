@@ -1,0 +1,8 @@
+flask
+pypdf
+python-docx
+beautifulsoup4
+werkzeug
+scikit-learn
+requests
+google-genai
