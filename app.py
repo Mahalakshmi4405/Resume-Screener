@@ -6,6 +6,7 @@ import sqlite3
 import csv
 import logging
 import requests
+import threading
 from flask import Flask, request, render_template, redirect, url_for, flash, jsonify, send_from_directory
 from pypdf import PdfReader
 import docx
@@ -21,6 +22,7 @@ from google import genai
 UPLOAD_FOLDER = 'uploads'
 ALLOWED_EXTENSIONS = {'pdf', 'docx'}
 DB_PATH = "resumes.db"
+MAX_GEMINI_CHARS = 1600   # limit how much of Gemini response we keep in DB
 
 # Setup logging
 logging.basicConfig(
@@ -45,11 +47,10 @@ if GEMINI_API_KEY:
 else:
     client = None
     GEMINI_ENABLED = False
-    logger.warning("GEMINI_API_KEY not set — Gemini calls will be skipped. Set GEMINI_API_KEY env var to enable.")
+    logger.warning("GEMINI_API_KEY not set — Gemini calls will be skipped.")
 
 # ---------- DB INIT & SCHEMA ----------
 def init_db():
-    logger.info("Initializing database...")
     conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
     c.execute('''CREATE TABLE IF NOT EXISTS resumes
@@ -69,21 +70,8 @@ def init_db():
                   progress INTEGER)''')
     conn.commit()
     conn.close()
-    logger.info("Database ready.")
-init_db()
 
-def update_db_columns(resume_id, **kwargs):
-    if not kwargs:
-        return
-    keys = list(kwargs.keys())
-    placeholders = ", ".join([f"{k} = ?" for k in keys])
-    vals = [kwargs[k] for k in keys] + [resume_id]
-    conn = sqlite3.connect(DB_PATH)
-    c = conn.cursor()
-    sql = f"UPDATE resumes SET {placeholders} WHERE id = ?"
-    c.execute(sql, vals)
-    conn.commit()
-    conn.close()
+init_db()
 
 # ---------- HELPERS ----------
 def allowed_file(filename):
@@ -157,6 +145,19 @@ def compute_similarity(text1, text2):
         logger.exception("Similarity computation failed")
         return 0.0
 
+def update_db_columns(resume_id, **kwargs):
+    if not kwargs:
+        return
+    keys = list(kwargs.keys())
+    placeholders = ", ".join([f"{k} = ?" for k in keys])
+    vals = [kwargs[k] for k in keys] + [resume_id]
+    conn = sqlite3.connect(DB_PATH)
+    c = conn.cursor()
+    sql = f"UPDATE resumes SET {placeholders} WHERE id = ?"
+    c.execute(sql, vals)
+    conn.commit()
+    conn.close()
+
 def exists_resume_text(text):
     conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
@@ -165,7 +166,7 @@ def exists_resume_text(text):
     conn.close()
     return row is not None
 
-def save_initial_metadata(resume_id, filename, resume_text, job_desc, job_link, similarity):
+def save_initial_metadata(resume_id, filename, resume_text, job_desc, job_link, similarity=0.0):
     logger.info("Inserting initial metadata row (processing)...")
     conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
@@ -197,14 +198,13 @@ def export_to_csv():
         writer.writerows(rows)
     logger.info("CSV export complete.")
 
-# ---------- GEMINI (text-only) ----------
+# ---------- Gemini helpers ----------
 def gemini_generate_from_text(prompt, model="gemini-2.5-flash"):
     if not GEMINI_ENABLED:
         logger.warning("Gemini not enabled — skipping API call.")
         return "[Gemini disabled: API key not configured]"
     try:
         logger.info("Calling Gemini (text prompt)...")
-        # pass a single text prompt in contents (text only)
         response = client.models.generate_content(model=model, contents=[prompt])
         text = getattr(response, "text", "") or str(response)
         logger.debug("Gemini response length: %d", len(text))
@@ -245,6 +245,161 @@ Return the requested output. If JSON is requested, return valid JSON only.
             return {"raw": raw}
     else:
         return raw.strip()
+
+def normalize_gemini_text(text, max_chars=MAX_GEMINI_CHARS):
+    """
+    - Trim and sanitize whitespace
+    - Convert long single-line outputs to bullet-like lines if they look list-y
+    - Truncate at word boundary to max_chars
+    """
+    if text is None:
+        return ""
+    s = str(text).strip()
+
+    # If raw JSON-like object, pretty-print a short excerpt
+    try:
+        parsed = json.loads(s)
+        # If it's a list, join with bullets
+        if isinstance(parsed, list):
+            lines = []
+            for item in parsed[:20]:
+                lines.append(f"• {str(item).strip()}")
+            out = "\n".join(lines)
+        elif isinstance(parsed, dict):
+            lines = []
+            for k, v in list(parsed.items())[:20]:
+                lines.append(f"• {k}: {str(v).strip()}")
+            out = "\n".join(lines)
+        else:
+            out = str(parsed)
+    except Exception:
+        out = s
+
+    # Replace multiple blank lines with one
+    out = re.sub(r'\r\n|\r', '\n', out)
+    out = re.sub(r'\n{2,}', '\n', out)
+
+    # If text is a single long line with separators like ; or . then attempt split into bullets
+    if '\n' not in out and len(out) > 180:
+        # split on sentence boundaries or semicolons
+        pieces = re.split(r'[;\.\n]\s+', out)
+        if len(pieces) > 1:
+            lines = [p.strip() for p in pieces if p.strip()]
+            out = "\n".join([("• " + l) for l in lines[:30]])
+    # Ensure bullets have nice bullet char
+    out = re.sub(r'^\s*-\s*', '• ', out, flags=re.M)
+    out = re.sub(r'^\s*•\s*', '• ', out, flags=re.M)
+
+    # Truncate safely (word boundary)
+    if len(out) > max_chars:
+        truncated = out[:max_chars]
+        # try truncate at last newline or space
+        last_nl = truncated.rfind('\n')
+        if last_nl > max_chars - 300:
+            truncated = truncated[:last_nl]
+        else:
+            last_space = truncated.rfind(' ')
+            if last_space > 0:
+                truncated = truncated[:last_space]
+        out = truncated.rstrip() + "\n…"
+
+    return out
+
+# ---------- BACKGROUND PROCESS ----------
+def process_resume_background(resume_id, filepath, resume_text, job_desc, job_link):
+    try:
+        update_db_columns(resume_id, status="processing", progress=10)
+        # re-extract (safety)
+        try:
+            extracted = extract_text_from_resume(filepath)
+            if extracted and (not resume_text or len(resume_text.strip()) < 10):
+                resume_text = extracted
+                update_db_columns(resume_id, resume_text=resume_text)
+        except Exception:
+            pass
+
+        # local similarity
+        update_db_columns(resume_id, progress=20)
+        try:
+            sim = compute_similarity(resume_text, job_desc)
+            update_db_columns(resume_id, similarity=sim, progress=30)
+        except Exception:
+            sim = 0.0
+            update_db_columns(resume_id, similarity=sim, progress=30)
+
+        # Gemini strengths
+        update_db_columns(resume_id, progress=40)
+        try:
+            strengths_raw = gemini_field_from_text(resume_text, job_desc, "List the top 3 strengths of the resume for this job. Keep each point short and specific (max 12 words). Format as bullet points (•).", expect_json=False)
+            strengths = normalize_gemini_text(strengths_raw)
+            update_db_columns(resume_id, gemini_good=strengths, progress=50)
+        except Exception:
+            update_db_columns(resume_id, gemini_good="[Error generating strengths]", progress=50)
+
+        # Gemini weaknesses
+        update_db_columns(resume_id, progress=55)
+        try:
+            weaknesses_raw = gemini_field_from_text(resume_text, job_desc, "List up to 3 weaknesses or issues in the resume. Keep each point short and specific (max 12 words). Format as bullet points (•).", expect_json=False)
+            weaknesses = normalize_gemini_text(weaknesses_raw)
+            update_db_columns(resume_id, gemini_bad=weaknesses, progress=65)
+        except Exception:
+            update_db_columns(resume_id, gemini_bad="[Error generating weaknesses]", progress=65)
+
+        # Gemini recommendations
+        update_db_columns(resume_id, progress=70)
+        try:
+            recs_raw = gemini_field_from_text(resume_text, job_desc, "Suggest 3 very short, actionable improvements for this resume. Use concise bullet points (•), focused on making the resume stronger for the given job.", expect_json=False)
+            recs = normalize_gemini_text(recs_raw)
+            update_db_columns(resume_id, gemini_recommendations=recs, progress=75)
+        except Exception:
+            update_db_columns(resume_id, gemini_recommendations="[Error generating recommendations]", progress=75)
+
+        # Gemini rating
+        update_db_columns(resume_id, progress=80)
+        try:
+            rating_text = gemini_field_from_text(resume_text, job_desc, "Rate the resume for this job on a scale from 0–10. Return ONLY the number.", expect_json=False)
+            rating_val = 0.0
+            try:
+                m = re.search(r"(\d+(\.\d+)?)", str(rating_text))
+                if m:
+                    rating_val = float(m.group(1))
+            except Exception:
+                rating_val = 0.0
+            update_db_columns(resume_id, gemini_rating=rating_val, progress=85)
+        except Exception:
+            update_db_columns(resume_id, gemini_rating=0.0, progress=85)
+
+        # Match and comparison (expect JSON)
+        update_db_columns(resume_id, progress=88)
+        try:
+            match_json = gemini_field_from_text(resume_text, job_desc, "Evaluate how well the resume matches the job description. Return JSON only:\\n{\\n  \"match_score\": <0-100>,\\n  \"comparison\": \"2–4 sentence summary comparing resume to job requirements\"\\n}", expect_json=True)
+            match_score = 0.0
+            comparison_text = ""
+            if isinstance(match_json, dict):
+                match_score = float(match_json.get("match_score") or match_json.get("match") or match_json.get("score") or 0)
+                comparison_text = str(match_json.get("comparison") or match_json.get("summary") or match_json.get("raw") or "")
+            else:
+                # fallback: treat as text
+                try:
+                    text = str(match_json)
+                    m = re.search(r'(\d+(\.\d+)?)\s*%', text)
+                    if m: match_score = float(m.group(1))
+                    comparison_text = text
+                except Exception:
+                    comparison_text = str(match_json)
+
+            combined = match_score or compute_similarity(resume_text, job_desc)
+            comparison_text = normalize_gemini_text(comparison_text, max_chars=1200)
+            update_db_columns(resume_id, gemini_match_score=combined, gemini_comparison=comparison_text, progress=95)
+        except Exception:
+            update_db_columns(resume_id, gemini_match_score=0.0, gemini_comparison="[Error]", progress=95)
+
+        update_db_columns(resume_id, status="done", progress=100)
+        export_to_csv()
+        logger.info(f"Processing complete for {resume_id}")
+    except Exception:
+        logger.exception("Background processing failed")
+        update_db_columns(resume_id, status="failed", progress=0)
 
 # ---------- ROUTES ----------
 @app.route("/", methods=["GET", "POST"])
@@ -299,7 +454,7 @@ def upload_resume():
             flash("❌ Please upload a resume file or provide a resume link.")
             return redirect(request.url)
 
-        # extract resume text
+        # Extract resume text quickly for duplicate check
         resume_text = extract_text_from_resume(filepath).strip()
         if resume_text.startswith("[Error"):
             flash(f"❌ {resume_text}")
@@ -309,102 +464,63 @@ def upload_resume():
             flash("⚠️ Duplicate resume detected (text already in DB). Skipping insert.")
             return redirect(request.url)
 
-        # Compute local similarity
-        sim_score = compute_similarity(resume_text, job_desc)
-
-        # Insert initial DB row in processing state
-        ok = save_initial_metadata(resume_id, filename, resume_text, job_desc, job_link or None, sim_score)
+        # Save initial DB row with small progress (background will do heavy lift)
+        ok = save_initial_metadata(resume_id, filename, resume_text, job_desc, job_link or None, similarity=0.0)
         if not ok:
             flash("⚠️ Duplicate detected or insert failed.")
             return redirect(request.url)
 
-        # Steps definitions
-        steps = [
-            ("gemini_good", 
-            "List the top 3 strengths of the resume for this job. Keep each point short and specific (max 12 words). Format as bullet points (•)."),
+        # Start background processing thread (non-blocking)
+        t = threading.Thread(target=process_resume_background, args=(resume_id, filepath, resume_text, job_desc, job_link), daemon=True)
+        t.start()
 
-            ("gemini_bad", 
-            "List up to 3 weaknesses or issues in the resume. Keep each point short and specific (max 12 words). Format as bullet points (•)."),
+        # Return the upload page but include resume_id so the page JS will start polling
+        return render_template("upload.html", resume_id=resume_id)
 
-            ("gemini_recommendations", 
-            "Suggest 3 very short, actionable improvements for this resume. Use concise bullet points (•), focused on making the resume stronger for the given job."),
+    # GET
+    return render_template("upload.html", resume_id="")
 
-            ("gemini_rating", 
-            "Rate the resume for this job on a scale from 0–10. Return ONLY the number."),
+@app.route("/status/<resume_id>")
+def status(resume_id):
+    conn = sqlite3.connect(DB_PATH)
+    c = conn.cursor()
+    c.execute("SELECT id, filename, similarity, gemini_good, gemini_bad, gemini_recommendations, gemini_rating, gemini_match_score, gemini_comparison, status, progress FROM resumes WHERE id = ?", (resume_id,))
+    row = c.fetchone()
+    conn.close()
+    if not row:
+        return jsonify({"error": "not found"}), 404
 
-            ("gemini_match_and_comparison", 
-            "Evaluate how well the resume matches the job description. Return JSON only:\n"
-            "{\n"
-            "  \"match_score\": <0-100>,\n"
-            "  \"comparison\": \"2–4 sentence summary comparing resume to job requirements\"\n"
-            "}")
-        ]
+    (rid, filename, similarity, gemini_good, gemini_bad, gemini_recommendations, gemini_rating, gemini_match_score, gemini_comparison, status_val, progress) = row
+    # Ensure values are serializable
+    return jsonify({
+        "id": rid,
+        "filename": filename,
+        "similarity": similarity,
+        "gemini_good": gemini_good,
+        "gemini_bad": gemini_bad,
+        "gemini_recommendations": gemini_recommendations,
+        "gemini_rating": gemini_rating,
+        "gemini_match_score": gemini_match_score,
+        "gemini_comparison": gemini_comparison,
+        "status": status_val,
+        "progress": progress
+    })
 
+@app.route("/scrape", methods=["POST"])
+def scrape():
+    data = request.get_json() or {}
+    url = data.get("url", "").strip()
+    if not url:
+        return jsonify({"content": "", "error": "No URL provided"}), 400
+    content = scrape_text_from_url(url)
+    return jsonify({"content": content})
 
-        try:
-            # strengths
-            update_db_columns(resume_id, status="processing", progress=10)
-            strengths = gemini_field_from_text(resume_text, job_desc, steps[0][1], expect_json=False)
-            update_db_columns(resume_id, gemini_good=str(strengths), progress=25)
-
-            # weaknesses
-            weaknesses = gemini_field_from_text(resume_text, job_desc, steps[1][1], expect_json=False)
-            update_db_columns(resume_id, gemini_bad=str(weaknesses), progress=40)
-
-            # recommendations
-            recs = gemini_field_from_text(resume_text, job_desc, steps[2][1], expect_json=False)
-            update_db_columns(resume_id, gemini_recommendations=str(recs), progress=55)
-
-            # rating (expect single number)
-            rating_text = gemini_field_from_text(resume_text, job_desc, steps[3][1], expect_json=False)
-            rating_val = 0.0
-            try:
-                m = re.search(r"(\d+(\.\d+)?)", str(rating_text))
-                if m:
-                    rating_val = float(m.group(1))
-            except Exception:
-                rating_val = 0.0
-            update_db_columns(resume_id, gemini_rating=rating_val, progress=70)
-
-            # match score + comparison (expect json)
-            match_json = gemini_field_from_text(resume_text, job_desc, steps[4][1], expect_json=True)
-            match_score = 0.0
-            comparison_text = ""
-            if isinstance(match_json, dict):
-                match_score = float(match_json.get("match_score") or match_json.get("match") or match_json.get("score") or 0)
-                comparison_text = str(match_json.get("comparison") or match_json.get("summary") or match_json.get("raw") or "")
-            else:
-                try:
-                    text = str(match_json)
-                    m = re.search(r'(\d+(\.\d+)?)\s*%', text)
-                    if m: match_score = float(m.group(1))
-                    comparison_text = text
-                except Exception:
-                    comparison_text = str(match_json)
-
-            # combine with local sim for final match
-            if match_score and match_score > 0:
-                combined_match = round((0.6 * float(match_score)) + (0.4 * float(sim_score)), 2)
-            else:
-                combined_match = sim_score
-
-            update_db_columns(resume_id, gemini_match_score=combined_match, gemini_comparison=comparison_text, progress=95)
-            update_db_columns(resume_id, status="done", progress=100)
-            export_to_csv()
-        except Exception as e:
-            logger.exception("Error during Gemini sequential processing")
-            update_db_columns(resume_id, status="failed", progress=0)
-            flash("❌ Error while analyzing resume with Gemini. Check logs.")
-            return redirect(url_for("report", resume_id=resume_id))
-
-        flash(f"✅ Resume stored! Local similarity: {sim_score}%, Gemini Match: {combined_match}%, Rating: {rating_val}/10")
-        return redirect(url_for("report", resume_id=resume_id))
-
-    return render_template("upload.html")
+@app.route("/uploads/<path:filename>")
+def uploaded_file(filename):
+    return send_from_directory(app.config['UPLOAD_FOLDER'], filename, as_attachment=False)
 
 @app.route("/report/<resume_id>")
 def report(resume_id):
-    logger.info(f"Fetching report for resume {resume_id}")
     conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
     c.execute("SELECT id, filename, resume_text, job_desc, job_link, similarity, gemini_good, gemini_bad, gemini_recommendations, gemini_rating, gemini_match_score, gemini_comparison, status, progress FROM resumes WHERE id = ?", (resume_id,))
@@ -421,7 +537,6 @@ def report(resume_id):
     resume_snippet = (resume_text or "")[:600] + ("..." if len(resume_text or "") > 600 else "")
     job_snippet = (job_desc or "")[:1000] + ("..." if len(job_desc or "") > 1000 else "")
 
-    # Provide clear placeholders when Gemini is disabled
     if not GEMINI_ENABLED:
         if not gemini_good: gemini_good = "[Gemini disabled]"
         if not gemini_bad: gemini_bad = "[Gemini disabled]"
@@ -443,45 +558,6 @@ def report(resume_id):
                            gemini_comparison=gemini_comparison,
                            status=status,
                            progress=progress)
-
-@app.route("/status/<resume_id>")
-def status(resume_id):
-    conn = sqlite3.connect(DB_PATH)
-    c = conn.cursor()
-    c.execute("SELECT id, filename, similarity, gemini_good, gemini_bad, gemini_recommendations, gemini_rating, gemini_match_score, gemini_comparison, status, progress, job_link FROM resumes WHERE id = ?", (resume_id,))
-    row = c.fetchone()
-    conn.close()
-    if not row:
-        return jsonify({"error": "not found"}), 404
-
-    (rid, filename, similarity, gemini_good, gemini_bad, gemini_recommendations, gemini_rating, gemini_match_score, gemini_comparison, status, progress, job_link) = row
-    return jsonify({
-        "id": rid,
-        "filename": filename,
-        "similarity": similarity,
-        "gemini_good": gemini_good,
-        "gemini_bad": gemini_bad,
-        "gemini_recommendations": gemini_recommendations,
-        "gemini_rating": gemini_rating,
-        "gemini_match_score": gemini_match_score,
-        "gemini_comparison": gemini_comparison,
-        "status": status,
-        "progress": progress,
-        "job_link": job_link
-    })
-
-@app.route("/scrape", methods=["POST"])
-def scrape():
-    data = request.get_json() or {}
-    url = data.get("url", "").strip()
-    if not url:
-        return jsonify({"content": "", "error": "No URL provided"}), 400
-    content = scrape_text_from_url(url)
-    return jsonify({"content": content})
-
-@app.route("/uploads/<path:filename>")
-def uploaded_file(filename):
-    return send_from_directory(app.config['UPLOAD_FOLDER'], filename, as_attachment=False)
 
 if __name__ == "__main__":
     logger.info("Starting Flask server...")

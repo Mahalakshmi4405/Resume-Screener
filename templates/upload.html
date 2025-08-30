@@ -1,81 +1,120 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>AI Resume Screener - Upload</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
-    :root {
-      --bg1: #0f172a;
-      --card: #ffffff;
-      --accent: #2563eb;
-      --muted: #6b7280;
+    :root{
+      --bg1:#0f172a;
+      --card:#ffffff;
+      --accent:#2563eb;
+      --muted:#6b7280;
+      --success:#10b981;
+      --danger:#ef4444;
     }
-    body {
-      margin: 0;
-      font-family: Inter, "Segoe UI", Tahoma, sans-serif;
-      background: linear-gradient(135deg, #0f172a 0%, #0b1220 100%);
-      color: #0f172a;
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 24px;
-    }
-    .card {
-      width: 880px;
-      max-width: 100%;
-      background: var(--card);
-      border-radius: 12px;
-      padding: 24px;
-      box-shadow: 0 10px 30px rgba(2,6,23,0.5);
-    }
-    h1 { margin: 0 0 6px; color: var(--accent); }
-    p.lead { margin: 0 0 16px; color: var(--muted); }
 
-    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-    label { display: block; font-weight: 600; margin-bottom: 6px; color: #111827; }
-    input[type="file"], input[type="text"], textarea {
-      width: 100%;
-      padding: 10px 12px;
-      border-radius: 8px;
-      border: 1px solid #e6e6e6;
-      font-size: 14px;
-      box-sizing: border-box;
-    }
-    .row { margin-bottom: 12px; }
-    .full { grid-column: 1 / -1; }
-
-    .muted { color: var(--muted); font-size: 13px; margin-top: 6px; }
-
-    .actions {
+    /* Page layout */
+    body{
+      margin:0;
+      font-family:Inter, "Segoe UI", Tahoma, sans-serif;
+      background:linear-gradient(135deg,#0f172a 0%,#0b1220 100%);
+      color:#0f172a;
+      min-height:100vh;
       display:flex;
-      gap:12px;
       align-items:center;
+      justify-content:center;
+      padding:24px;
     }
-    button, input[type="submit"] {
-      padding: 10px 14px;
-      border-radius: 8px;
-      border: none;
-      cursor: pointer;
-      font-weight: 600;
+
+    .card{
+      width:880px;
+      max-width:100%;
+      background:var(--card);
+      border-radius:12px;
+      padding:22px;
+      box-shadow:0 10px 30px rgba(2,6,23,0.5);
+      position:relative;
     }
-    .btn-primary { background: var(--accent); color: white; }
-    .btn-secondary { background: #eef2ff; color: var(--accent); }
 
-    .flash {
-      margin-top: 14px;
+    h1{ margin:0 0 6px; color:var(--accent); }
+    p.lead{ margin:0 0 16px; color:var(--muted); }
+
+    .grid{ display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+    label{ display:block; font-weight:600; margin-bottom:6px; color:#111827; }
+    input[type="file"], input[type="text"], textarea{
+      width:100%; padding:10px 12px; border-radius:8px; border:1px solid #e6e6e6; font-size:14px; box-sizing:border-box;
     }
-    .flash > div { background: #fef3c7; padding: 10px; border-radius: 8px; color: #92400e; margin-bottom:8px; }
+    .row{ margin-bottom:12px; }
+    .full{ grid-column:1 / -1; }
+    .muted{ color:var(--muted); font-size:13px; margin-top:6px; }
+    .actions{ display:flex; gap:12px; align-items:center; }
+    button, input[type="submit"]{ padding:10px 14px; border-radius:8px; border:none; cursor:pointer; font-weight:600; }
+    .btn-primary{ background:var(--accent); color:white; }
+    .btn-secondary{ background:#eef2ff; color:var(--accent); }
 
-    small.note { color: #6b7280; display: block; margin-top: 6px; }
+    .top-actions{ display:flex; justify-content:flex-end; gap:12px; margin-bottom:10px; }
+    .link-btn{ background:transparent; color:var(--accent); border:1px solid #e6e6e6; padding:8px 10px; border-radius:8px; text-decoration:none; }
 
-    .top-actions { display:flex; justify-content: flex-end; gap:12px; margin-bottom:10px; }
-    .link-btn { background: transparent; color: var(--accent); border: 1px solid #e6e6e6; padding:8px 10px; border-radius:8px; text-decoration:none; }
-
-    @media (max-width:920px) {
-      .grid { grid-template-columns: 1fr; }
+    /* SIMPLE overlay */
+    .overlay{
+      position:fixed;
+      inset:0;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      background:rgba(6,11,36,0.72);
+      z-index:9999;
+      padding:20px;
     }
+
+    .loader-card{
+      width:560px;
+      max-width:100%;
+      background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border-radius:12px;
+      padding:18px;
+      color:white;
+      box-shadow:0 10px 30px rgba(2,6,23,0.6);
+      text-align:left;
+      font-size:14px;
+    }
+
+    .loader-row{ display:flex; align-items:center; gap:14px; }
+    .spinner {
+      width:44px; height:44px; border-radius:50%;
+      border:5px solid rgba(255,255,255,0.12);
+      border-top-color: #60a5fa; animation: spin 1s linear infinite;
+      box-shadow:0 6px 18px rgba(96,165,250,0.08);
+    }
+    @keyframes spin{ to { transform: rotate(360deg); } }
+
+    .loader-title{ font-weight:700; margin:0 0 2px; color:white; font-size:16px; }
+    .loader-sub{ font-size:13px; color:rgba(255,255,255,0.85); margin:0; }
+
+    .progress-wrap{ margin-top:14px; }
+    .progress-bar{
+      height:12px; background:rgba(255,255,255,0.08); border-radius:8px; overflow:hidden;
+    }
+    .progress-fill{
+      height:100%; width:0%; background: linear-gradient(90deg, #60a5fa, #2563eb);
+      transition: width 350ms ease;
+    }
+    .progress-info{ display:flex; justify-content:space-between; margin-top:8px; font-size:13px; color:rgba(255,255,255,0.85); }
+
+    .mini-steps{ margin-top:14px; display:flex; gap:12px; justify-content:space-between; }
+    .mini-step{ flex:1; background:rgba(255,255,255,0.02); padding:8px; border-radius:8px; text-align:center; }
+    .mini-step small{ display:block; color:rgba(255,255,255,0.75); margin-top:6px; font-size:12px; }
+
+    /* animated ellipsis for short subtext */
+    .dots::after { content: ''; display:inline-block; width:8px; height:8px; margin-left:6px; border-radius:50%; background:transparent; box-shadow: 12px 0px 0 #fff, 24px 0px 0 #fff; animation: dots 1s steps(3, end) infinite; vertical-align:middle; opacity:.9; }
+    @keyframes dots { 0% { transform: translateY(0); } 50% { transform: translateY(-3px); } 100% { transform: translateY(0); } }
+
+    @media (max-width:640px){
+      .loader-card{ width:92%; padding:14px; }
+      .mini-steps{ flex-direction:column; }
+    }
+
   </style>
 </head>
 <body>
@@ -86,14 +125,14 @@
     </div>
 
     <h1>AI Resume Screener</h1>
-    <p class="lead">Upload a resume (PDF/DOCX) and paste or link the job description. We'll compute a similarity score and ask Gemini to review & match.</p>
+    <p class="lead">Upload a resume (PDF/DOCX) and paste or link the job description — we'll analyze it and give a report.</p>
 
-    <form method="post" enctype="multipart/form-data">
+    <form id="uploadForm" method="post" enctype="multipart/form-data">
       <div class="grid">
         <div class="row">
           <label>Resume File (PDF / DOCX)</label>
-          <input type="file" name="resume_file" accept=".pdf,.doc,.docx">
-          <small class="note">Or provide a public resume link (direct .pdf/.docx) below.</small>
+          <input type="file" name="resume_file" accept=".pdf,.doc,.docx" required>
+          <small class="note">Or provide a public resume link (direct .pdf/.docx).</small>
         </div>
 
         <div class="row">
@@ -103,7 +142,7 @@
 
         <div class="row full">
           <label>Job Description (paste text here)</label>
-          <textarea id="job_desc" name="job_desc" rows="8" placeholder="Paste job description text here..."></textarea>
+          <textarea id="job_desc" name="job_desc" rows="8" placeholder="Paste job description text here..." required></textarea>
         </div>
 
         <div class="row">
@@ -117,7 +156,7 @@
           <div class="actions">
             <button type="button" class="btn-secondary" onclick="pasteFromClipboard()">📋 Paste JD</button>
             <button type="button" class="btn-secondary" onclick="scrapeJobLink()">🔎 Scrape Job Link</button>
-            <input type="submit" class="btn-primary" value="Submit and Analyze">
+            <input type="submit" id="submitBtn" class="btn-primary" value="Submit and Analyze">
           </div>
         </div>
       </div>
@@ -134,38 +173,177 @@
     </form>
   </div>
 
-<script>
-  async function pasteFromClipboard() {
-    try {
-      const text = await navigator.clipboard.readText();
-      const jd = document.getElementById("job_desc");
-      jd.value = text || jd.value;
-    } catch (e) {
-      alert("Clipboard access failed. Try Ctrl+V.");
-      console.error(e);
-    }
-  }
+  <!-- Minimal overlay (in-page) -->
+  <div id="overlay" class="overlay" role="status" aria-hidden="true">
+    <div class="loader-card" role="dialog" aria-modal="true" aria-labelledby="loaderTitle">
+      <div class="loader-row">
+        <div class="spinner" aria-hidden="true"></div>
+        <div style="flex:1">
+          <div id="loaderTitle" class="loader-title">Processing your resume</div>
+          <div id="loaderSub" class="loader-sub dots">We are running checks</div>
+        </div>
+      </div>
 
-  async function scrapeJobLink() {
-    const url = document.getElementById("job_link").value.trim();
-    if (!url) { alert("Enter job link first."); return; }
-    try {
-      const res = await fetch("/scrape", {
-        method: "POST",
-        headers: {"Content-Type": "application/json"},
-        body: JSON.stringify({url})
-      });
-      const data = await res.json();
-      if (data.error) {
-        alert("Scrape error: " + data.error);
-      } else {
-        document.getElementById("job_desc").value = data.content || "";
+      <div class="progress-wrap">
+        <div class="progress-bar" aria-hidden="true">
+          <div id="progressFill" class="progress-fill" style="width:0%"></div>
+        </div>
+        <div class="progress-info">
+          <div id="progressLabel">Starting…</div>
+          <div id="progressPercent">0%</div>
+        </div>
+      </div>
+
+      <div class="mini-steps" aria-hidden="true">
+        <div class="mini-step">
+          <strong id="s_extract">Extract</strong>
+          <small id="s_extract_note">File</small>
+        </div>
+        <div class="mini-step">
+          <strong id="s_similarity">Similarity</strong>
+          <small id="s_similarity_note">Local</small>
+        </div>
+        <div class="mini-step">
+          <strong id="s_gemini">Gemini</strong>
+          <small id="s_gemini_note">Match & rating</small>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      // resumeId injected by server when POST returns this template
+      const resumeId = "{{ resume_id|default('') }}";
+      const overlay = document.getElementById('overlay');
+      const submitBtn = document.getElementById('submitBtn');
+      const form = document.getElementById('uploadForm');
+
+      // helper show/hide
+      function showOverlay() {
+        overlay.style.display = 'flex';
+        overlay.setAttribute('aria-hidden','false');
       }
-    } catch (err) {
-      alert("Failed to scrape job link.");
-      console.error(err);
-    }
-  }
-</script>
+      function hideOverlay() {
+        overlay.style.display = 'none';
+        overlay.setAttribute('aria-hidden','true');
+      }
+
+      // Poll server for progress
+      async function pollStatus(id) {
+        if (!id) return;
+        showOverlay();
+
+        try {
+          const res = await fetch(`/status/${id}`);
+          if (!res.ok) {
+            document.getElementById('progressLabel').textContent = 'Status unavailable';
+            return setTimeout(() => pollStatus(id), 2000);
+          }
+          const data = await res.json();
+          const prog = (data.progress !== null && data.progress !== undefined) ? Number(data.progress) : 0;
+
+          // update progress
+          const fill = document.getElementById('progressFill');
+          const percent = document.getElementById('progressPercent');
+          const label = document.getElementById('progressLabel');
+
+          fill.style.width = prog + '%';
+          percent.textContent = prog + '%';
+
+          // small simple notes
+          document.getElementById('s_extract').textContent = (data.filename ? 'Saved' : (prog > 5 ? 'Done' : 'Extracting'));
+          document.getElementById('s_extract_note').textContent = data.filename ? data.filename.split('_').pop() : 'file';
+
+          document.getElementById('s_similarity').textContent = (data.similarity !== null && data.similarity !== undefined) ? `${data.similarity}%` : (prog >= 20 ? 'Computed' : 'Pending');
+          document.getElementById('s_similarity_note').textContent = 'local';
+
+          let gemTxt = 'Pending';
+          if (data.gemini_match_score || data.gemini_rating) {
+            const r = data.gemini_rating ? `${data.gemini_rating}/10` : '-';
+            const m = data.gemini_match_score ? `${data.gemini_match_score}%` : '-';
+            gemTxt = `R:${r} • M:${m}`;
+          } else if (prog >= 40) {
+            gemTxt = 'Processing';
+          }
+          document.getElementById('s_gemini').textContent = gemTxt;
+          document.getElementById('s_gemini_note').textContent = 'AI';
+
+          // label text
+          if (prog <= 10) label.textContent = 'Starting…';
+          else if (prog <= 40) label.textContent = 'Extracting & computing similarity';
+          else if (prog <= 70) label.textContent = 'Running Gemini checks';
+          else if (prog < 100) label.textContent = 'Finalizing results';
+          else label.textContent = 'Almost done';
+
+          if (data.status === 'done') {
+            // let user see 100% briefly, then go to report
+            fill.style.width = '100%';
+            percent.textContent = '100%';
+            label.textContent = 'Done — opening report';
+            setTimeout(() => window.location.href = `/report/${id}`, 600);
+            return;
+          }
+          if (data.status === 'failed') {
+            label.textContent = 'Processing failed. Check server logs.';
+            return;
+          }
+
+          // continue polling
+          setTimeout(() => pollStatus(id), 1400);
+        } catch (err) {
+          console.error(err);
+          setTimeout(() => pollStatus(id), 2500);
+        }
+      }
+
+      // When the local form is submitted, show overlay immediately (but allow POST to proceed)
+      form.addEventListener('submit', function () {
+        submitBtn.setAttribute('disabled', 'true');
+        submitBtn.value = 'Uploading…';
+        showOverlay();
+      });
+
+      // If the server returned a resumeId (after POST), start polling
+      if (resumeId && resumeId.trim().length > 0) {
+        // show overlay & start polling
+        showOverlay();
+        setTimeout(() => pollStatus(resumeId), 400);
+      } else {
+        hideOverlay();
+      }
+
+      // paste & scrape functions
+      window.pasteFromClipboard = async function () {
+        try {
+          const text = await navigator.clipboard.readText();
+          const jd = document.getElementById("job_desc");
+          jd.value = text || jd.value;
+        } catch (e) {
+          alert("Clipboard access failed. Try Ctrl+V.");
+          console.error(e);
+        }
+      };
+
+      window.scrapeJobLink = async function () {
+        const url = document.getElementById("job_link").value.trim();
+        if (!url) { alert("Enter job link first."); return; }
+        try {
+          const res = await fetch("/scrape", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ url })
+          });
+          const data = await res.json();
+          if (data.error) alert("Scrape error: " + data.error);
+          else document.getElementById("job_desc").value = data.content || "";
+        } catch (err) {
+          alert("Failed to scrape job link."); console.error(err);
+        }
+      };
+
+    }); // DOMContentLoaded
+  </script>
 </body>
 </html>
+

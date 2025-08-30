@@ -1,5 +1,5 @@
 ID,Filename,Resume_Content,Job_Description,Job_Link,Similarity,Good_Points,Bad_Points,Recommendations,Rating,Gemini_Match_Score,Gemini_Comparison
-3c338458-714f-4c2e-bd14-832ba8e9aa2f,3c338458-714f-4c2e-bd14-832ba8e9aa2f_ATS_Resume.pdf,"SUMMARY
+58797051-bc40-4e88-aa33-d833e13277de,58797051-bc40-4e88-aa33-d833e13277de_ATS_Resume.pdf,"SUMMARY
           AI Engineering student with a strong focus on Generative AI, Large Language Models (LLMs), and
 Applied Machine Learning. Skilled in Computer Vision and Deep Learning, with advanced Python
 proficiency and fundamental knowledge of C and C++. Experienced in model training, optimization, and
@@ -95,74 +95,58 @@ Certified Power BI Analyst – Forsage, 2023
  Top  AI Voice – LinkedIn Recognition - 2024
 Best Borrower of RIT Library  - 2023
 Best Library User – RIT Library 2023
-last updated (22/7/2025)","Job Description: Junior AI Engineer
+last updated (22/7/2025)","Job description
+Embark on a transformative journey with SwaaS, where innovation meets opportunity. Explore thrilling career prospects at the cutting edge of technology. Join our dynamic team, dedicated to shaping the future of IT. At SwaaS, we offer more than just jobs; we provide a platform for growth, collaboration, and impactful contributions. Discover a workplace where your aspirations align with limitless possibilities. Your journey towards a rewarding career in technology begins here, with SwaaS as your guide.
 
-Position: Junior AI Engineer
-Location: [Your Location / Remote / Hybrid]
-Employment Type: Full-time
+Perks and Benefits
 
-About the Role
+We go beyond Salaries and provide guaranteed benefits that speak about Swaas value and culture. Our employees get common benefits and also performance-based individual benefits
 
-We are seeking a Junior AI Engineer to join our growing team of innovators. This role is ideal for someone passionate about artificial intelligence, machine learning, and data-driven problem-solving, with a strong desire to learn and contribute to real-world AI projects. As a Junior AI Engineer, you will work closely with senior engineers and data scientists to design, build, and deploy AI-powered solutions that drive impact across our products and services.
+Performance based benefits
 
-Key Responsibilities
+We promote a culture of equity Accept the challenge, deliver the results and get rewarded
 
-Assist in developing and training machine learning models for various applications.
+Healthcare
 
-Work with large datasets, including data cleaning, preprocessing, and feature engineering.
+Our comprehensive medical insurance helps you cover your urgent medical needs
 
-Support the deployment and monitoring of AI models in production.
+Competitive Salary
 
-Collaborate with cross-functional teams including product, engineering, and research.
+We assure with pride that we are on par with the industry leaders in terms of our salary package
 
-Conduct literature reviews to stay updated on emerging AI/ML techniques and tools.
+Employee Engagement
 
-Participate in code reviews, contribute to documentation, and ensure best practices in reproducible AI workflows.
+A break is always needed out of the regular monotonous work assignments. Our employee engagement program helps our employees enhance their team bonding
 
-Provide support in debugging, optimizing, and scaling AI systems.
+Upskilling
 
-Qualifications
+We believe in fostering a culture of Learning and harnessing the untapped potential in our employees. Everyone is encouraged and rewarded for acquiring new skills and certifications
+• Junior AI/ML Developer (Entry-Level) (Experience: 0-2 years)
 
-Required:
+Tech Stack: Python, Node.js (Javascript), LangChain, LLama Index, OpenAI API, Perplexity.ai API, Neo4j, PostgreSQL
 
-Bachelor’s degree in Computer Science, Data Science, Engineering, Mathematics, or related field (or equivalent practical experience).
+Responsibilities:
+• Assist in developing AI-driven solutions using LLMs (ChatGPT, Perplexity.ai) and RAG (Retrieval-Augmented Generation).
+• Work on intent extraction and chatbot development, integrating APIs like OpenAI or LLama.
+• Support the design and testing of AI-enhanced workflows.
+• Implement database interactions (MySQL or PostgreSQL for structured data).
+• Write and optimize Python/Node.js scripts for the applications.
+• Debug and refine LLM-powered chatbots.
 
-Strong knowledge of Python and libraries such as NumPy, Pandas, and Scikit-learn.
-
-Basic understanding of machine learning concepts (supervised/unsupervised learning, neural networks, NLP, or computer vision).
-
-Familiarity with frameworks such as TensorFlow or PyTorch.
-
-Knowledge of SQL and experience handling structured/unstructured data.
-
-Good problem-solving skills and eagerness to learn.
-
-Preferred (Nice-to-have):
-
-Internship or project experience in AI/ML applications.
-
-Familiarity with cloud platforms (AWS, GCP, Azure) for AI/ML workflows.
-
-Understanding of MLOps tools for model deployment and monitoring.
-
-Contributions to open-source projects, Kaggle competitions, or personal AI projects.
-
-What We Offer
-
-Mentorship and growth opportunities with experienced AI professionals.
-
-Exposure to cutting-edge AI projects across industries.
-
-A collaborative, innovative, and supportive work environment.
-
-Opportunities for professional development and training.
-
-Competitive salary and benefits package.",,18.16,"*   Extensive hands-on AI/ML project and internship experience.
-*   Comprehensive technical skills in Python, ML frameworks, CV, and LLMs.
-*   Proven ability to deploy and optimize real-world AI solutions.","*   Experience section contains multiple future-dated internships.
-*   Lacks explicit mention of cloud platform experience (AWS/GCP/Azure).
-*   Includes irrelevant personal awards (e.g., Best Library User).","Here are 3 very short, actionable improvements for this resume:
-
-*   **Reorder Experience:** Reorganize ""Professional Experience & Projects"" into strict reverse chronological order (most recent first) for clarity and readability.
-*   **Add Cloud Experience:** Explicitly mention any familiarity with cloud platforms (AWS, GCP, Azure) under ""Technical Skills"" to address the job's preferred qualifications.
-*   **Highlight MLOps Tools:** If applicable, list any MLOps-specific tools (e.g., MLflow, Kubeflow, W&B) in ""Technical Skills"" or within project descriptions to strengthen alignment with preferred qualifications.",9.0,64.26,"The candidate is an excellent match for the Junior AI Engineer role, demonstrating strong proficiency in Python, key AI/ML frameworks like PyTorch and TensorFlow, and practical experience across Computer Vision, LLMs, and data science. Their extensive internships and projects directly align with the job's core responsibilities, including model development, optimization, and real-time deployment. While explicit mention of major cloud platforms or dedicated MLOps tools is limited, the candidate's proven ability to build and deploy complex AI solutions in diverse settings makes them a highly compelling applicant."
+Requirements:
+• Strong programming skills in Python (FastAPI, Flask) or Node.js.
+• Exposure to NLP, LLMs, AI APIs (ChatGPT, Perplexity.ai, LangChain).
+• Familiarity with RESTful APIs and Graph Databases (Neo4j).
+• Basic understanding of cloud platforms (AWS, Azure, GCP).
+• Passion for AI, NLP, and chatbot development.
+• Bonus: Knowledge of UI frameworks (React, Next.js).
+• Good to have - Pinecone or equivalent vector databases.",,9.84,"*   Extensive LLM, RAG, LangChain, and AI Agent development experience.
+*   Advanced Python proficiency with Flask and FastAPI exposure.
+*   Hands-on experience with vector databases (Chroma, Qdrant).","*   Lacks Node.js/Javascript programming skills.
+*   No Neo4j or PostgreSQL database experience.
+*   Missing cloud platform (AWS, Azure, GCP) exposure.","Here are 3 very short, actionable improvements for this resume:
+*   **Correct Chronology:** Immediately revise all internship and project dates to reflect actual past experiences. Several entries, like ""April 2025 - July 2025 Junior AI Intern,"" list future dates for completed work, which is a critical error.
+*   **Address Missing Tech Stack:** Add any exposure to Graph Databases (specifically Neo4j) and Cloud Platforms (AWS, Azure, or GCP) to your Technical Skills, as these are explicit requirements.
+*   **Highlight Chatbot/API Integration:** For relevant LLM projects (e.g., ""AI Agentic Content Writer,"" ""Coding Question Generator""), explicitly detail API integrations and how they led to ""chatbot development"" or ""intent extraction"" to align directly with job responsibilities.",9.0,90.0,"• The candidate is an excellent match for this Junior AI/ML Developer (Entry-Level) role, demonstrating strong proficiency in Python, Generative AI, LLMs, LangChain, RAG, and vector databases, which are central to the job description
+• Their extensive project experience in building AI agents, personalized content generators, and optimized computer vision systems directly aligns with the responsibilities
+• While specific experience with Node.js, Neo4j, and certain cloud platforms is not explicitly mentioned, their core technical skills and passion for AI make them a highly promising candidate for this role."
